@@ -1,0 +1,57 @@
+{
+  "version": "4",
+  "groupKey": "{}",
+  "status": "firing",
+  "alerts": [
+    {
+      "status": "firing",
+      "labels": {
+        "alertname": "InstanceDown",
+        "instance": "localhost:9090",
+        "job": "prometheus",
+        "monitor": "codelab-monitor",
+        "severity": "page"
+      },
+      "annotations": {
+        "description": "实例localhost:9090已下线",
+        "summary": "Instance Down"
+      },
+      "startsAt": "2024-07-16T12:00:00Z",
+      "endsAt": "0001-01-01T00:00:00Z",
+      "generatorURL": "http://localhost:9090/graph?g0.expr=up%7Bjob%3D%22prometheus%22%7D+%3D%3D+0&g0.tab=1",
+      "fingerprint": "4f7b967e4d6058c8"
+    }
+  ],
+  "groupLabels": {},
+  "commonLabels": {
+    "alertname": "InstanceDown",
+    "job": "prometheus",
+    "monitor": "codelab-monitor",
+    "severity": "page"
+  },
+  "commonAnnotations": {
+    "description": "实例localhost:9090已下线",
+    "summary": "Instance Down"
+  },
+  "externalURL": "http://localhost:9093",
+  "alerts": [
+    {
+      "status": "firing",
+      "labels": {
+        "alertname": "InstanceDown",
+        "instance": "localhost:9090",
+        "job": "prometheus",
+        "monitor": "codelab-monitor",
+        "severity": "page"
+      },
+      "annotations": {
+        "description": "实例localhost:9090已下线",
+        "summary": "Instance Down"
+      },
+      "startsAt": "2024-07-16T12:00:00Z",
+      "endsAt": "0001-01-01T00:00:00Z",
+      "generatorURL": "http://localhost:9090/graph?g0.expr=up%7Bjob%3D%22prometheus%22%7D+%3D%3D+0&g0.tab=1",
+      "fingerprint": "4f7b967e4d6058c8"
+    }
+  ]
+}
