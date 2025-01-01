@@ -1,22 +1,17 @@
-# 使用官方的Python 3.10镜像，基于Alpine Linux
+# 使用官方的 Python 3.10 Alpine 基础镜像
 FROM python:3.10-alpine
 
 # 设置工作目录
 WORKDIR /app
 
-# 将当前目录下的所有文件复制到工作目录中
+# 复制当前目录中的所有文件到工作目录
 COPY . /app
 
-# 安装必要的Python包
+# 安装必要的依赖
 RUN pip install --no-cache-dir flask requests
 
-# 使端口5000可供外部访问
+# 暴露端口
 EXPOSE 5000
 
-# 定义环境变量
-ENV FLASK_APP=prometheus-alertmanager-wechat/main.py
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_RUN_PORT=5000
-
-# 运行Flask应用
-CMD ["flask", "run"]
+# 设置默认命令来运行应用
+CMD ["python", "app.py"]

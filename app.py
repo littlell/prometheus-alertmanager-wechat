@@ -21,16 +21,7 @@ def hello_world():
         instance = data['alerts'][0]['labels'].get('instance', '未知实例')
         job = data['alerts'][0]['labels'].get('job', '未知作业')
 
-        # Markdown格式的告警信息
-        markdown_message = f"""
-        
-        **告警名称**：{alertname}
-        **告警状态**：{status}
-        **告警级别**：{severity}
-        **作业名称**：{job}
-        **故障实例**：{instance}
-        **告警时间**：{data['alerts'][0].get('startsAt', '未知时间')}
-        """
+        markdown_message = build_markdown_message(alertname, data, instance, job, severity, status)
 
         # POST请求的数据
         send_data = {
@@ -54,3 +45,17 @@ def hello_world():
     else:
         print("提供的数据中缺少必要的键值")
         return "<p>提供的数据中缺少必要的键值</p>", 400
+
+
+def build_markdown_message(alertname, data, instance, job, severity, status):
+    # Markdown格式的告警信息
+    markdown_message = f"""
+        
+        **告警名称**：{alertname}
+        **告警状态**：{status}
+        **告警级别**：{severity}
+        **作业名称**：{job}
+        **故障实例**：{instance}
+        **告警时间**：{data['alerts'][0].get('startsAt', '未知时间')}
+        """
+    return markdown_message
