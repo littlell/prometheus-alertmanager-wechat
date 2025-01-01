@@ -4,6 +4,9 @@ FROM python:3.10-alpine
 # 设置工作目录
 WORKDIR /app
 
+# 使用国内源替换默认的apk源
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+
 # 复制当前目录中的所有文件到工作目录
 COPY . /app
 
