@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir flask requests
 EXPOSE 5000
 
 # 设置默认命令来运行应用
-CMD ["python", "app.py"]
+CMD ["flask", "run"]
