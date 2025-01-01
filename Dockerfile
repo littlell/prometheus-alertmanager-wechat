@@ -8,7 +8,8 @@ WORKDIR /app
 COPY . /app
 
 # 安装必要的依赖
-RUN pip install --no-cache-dir flask requests
+RUN apk add --no-cache curl && \
+    pip install --no-cache-dir flask requests
 
 # 暴露端口
 EXPOSE 5000
