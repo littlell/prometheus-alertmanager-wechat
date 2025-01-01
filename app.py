@@ -1,4 +1,6 @@
 import json
+import os
+
 import requests
 
 from flask import Flask, request
@@ -11,8 +13,8 @@ def hello_world():
     data = request.get_json()
     print(data)
 
-    # 目标URL
-    url = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=5d14483e-7ba4-473f-b75e-0831e0464018'
+    # 从环境变量获取目标WEBHOOK URL
+    url = os.getenv('WEBHOOK_URL')
 
     if 'alerts' in data and len(data['alerts']) > 0 and 'labels' in data['alerts'][0]:
         alertname = data['alerts'][0]['labels'].get('alertname', '未知告警')
