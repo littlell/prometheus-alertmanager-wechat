@@ -15,10 +15,10 @@ ENV PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/
 
 # 安装必要的依赖
 RUN apk add --no-cache curl && \
-    pip install --no-cache-dir flask requests python-dateutil pytz
+    pip install --no-cache-dir flask requests python-dateutil pytz gunicorn
 
 # 暴露端口
 EXPOSE 5000
 
-# 设置默认命令来运行应用，并绑定到所有网络接口
-CMD ["flask", "run", "--host=0.0.0.0"]
+# 设置默认命令来运行应用
+CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "app:app"]
