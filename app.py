@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 
 import requests
@@ -6,12 +7,14 @@ import requests
 from flask import Flask, request
 
 app = Flask(__name__)
+# 设置日志级别为 INFO
+app.logger.setLevel(logging.INFO)
 
 
 @app.route('/alertinfo', methods=['POST'])
 def hello_world():
     data = request.get_json()
-    print(data)
+    app.logger.info(data)
 
     # 从环境变量获取目标WEBHOOK URL
     url = os.getenv('WEBHOOK_URL')
@@ -42,7 +45,7 @@ def hello_world():
                                  data=json_send_data)
 
         # 打印响应内容
-        print(response.text)
+        app.logger.info(response.text)
 
         return "<p>Hello, World!</p>"
     else:
