@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import textwrap
 
 import requests
 from dateutil import parser
@@ -11,6 +12,7 @@ app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
 
 WEBHOOK_URL = os.getenv('WEBHOOK_URL')
+
 
 @app.route('/alertinfo', methods=['POST'])
 def alert_info():
@@ -64,14 +66,14 @@ def format_time(time_str):
 
 def build_markdown_message(alert_name, status, severity, instance, application, starts_at):
     # Markdown格式的告警信息
-    markdown_message = f"""
+    markdown_message = textwrap.dedent(f"""
     **告警名称**：{alert_name}
     **告警状态**：{status}
     **告警级别**：{severity}
     **实例名称**：{instance}
     **应用名称**：{application}
     **告警时间**：{starts_at}
-    """
+    """)
     return markdown_message
 
 
@@ -83,7 +85,8 @@ def send_alert_to_webhook(message):
         }
     }
     json_send_data = json.dumps(send_data)
-    response = requests.post(WEBHOOK_URL, headers={'Content-Type': 'application/json'}, data=json_send_data)
+    response = requests.post(WEBHOOK_URL, headers={'Content-Type': 'application/json'},
+                             data=json_send_data)
     return response
 
 
