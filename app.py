@@ -3,6 +3,7 @@ import logging
 import os
 import textwrap
 
+import pytz
 import requests
 from dateutil import parser
 from flask import Flask, request
@@ -57,7 +58,12 @@ def extract_alert_details(alert):
 
 def format_time(time_str):
     try:
-        formatted_time = parser.parse(time_str).strftime("%Y年%m月%d日 %H时%M分%S秒")
+        # 解析时间字符串并将其转换为 UTC 时区
+        utc_time = parser.parse(time_str).astimezone(pytz.utc)
+        # 将时间转换为 UTC+8 时区
+        local_time = utc_time.astimezone(pytz.timezone('Asia/Shanghai'))
+        # 格式化时间字符串
+        formatted_time = local_time.strftime("%Y年%m月%d日 %H时%M分%S秒")
     except Exception as e:
         app.logger.error("Error parsing time: %s", e)
         formatted_time = '未知时间'
