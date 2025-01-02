@@ -10,6 +10,9 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 # 复制当前目录中的所有文件到工作目录
 COPY . /app
 
+# 使用国内源替换默认的pip源
+ENV PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/
+
 # 安装必要的依赖
 RUN apk add --no-cache curl && \
     pip install --no-cache-dir flask requests
