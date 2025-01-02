@@ -1,6 +1,8 @@
 import json
 import logging
 import os
+from datetime import datetime
+from dateutil import parser
 
 import requests
 from flask import Flask, request
@@ -25,10 +27,11 @@ def hello_world():
         instance = data['alerts'][0]['labels'].get('instance', '未知实例')
         application = data['alerts'][0]['labels'].get('app', '未知应用')
         starts_at = data['alerts'][0].get('startsAt', '未知时间')
+        formatted_time = parser.parse(starts_at).strftime("%Y年%m月%d日 %H时%M分%S秒")
 
         markdown_message = build_markdown_message(alert_name, status, severity, instance,
                                                   application,
-                                                  starts_at)
+                                                  formatted_time)
         # POST请求的数据
         send_data = {
             "msgtype": "markdown",
