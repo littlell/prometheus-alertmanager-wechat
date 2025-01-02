@@ -23,10 +23,10 @@ def hello_world():
         alert_name = data['alerts'][0]['labels'].get('alertname', '未知告警')
         status = data['alerts'][0].get('status', '未知状态')
         severity = data['alerts'][0]['labels'].get('severity', '未知严重性')
-        instance = data['alerts'][0]['labels'].get('instance', '未知实例')
+        pod = data['alerts'][0]['labels'].get('pod', '未知实例')
         application = data['alerts'][0]['labels'].get('app', '未知应用')
 
-        markdown_message = build_markdown_message(alert_name, data, instance, application, severity,
+        markdown_message = build_markdown_message(alert_name, data, pod, application, severity,
                                                   status)
 
         # POST请求的数据
@@ -53,7 +53,7 @@ def hello_world():
         return "<p>提供的数据中缺少必要的键值</p>", 400
 
 
-def build_markdown_message(alert_name, data, instance, application, severity, status):
+def build_markdown_message(alert_name, data, pod, application, severity, status):
     # Markdown格式的告警信息
     markdown_message = f"""
         
@@ -61,7 +61,20 @@ def build_markdown_message(alert_name, data, instance, application, severity, st
         **告警状态**：{status}
         **告警级别**：{severity}
         **应用名称**：{application}
-        **故障实例**：{instance}
+        **POD**：{pod}
         **告警时间**：{data['alerts'][0].get('startsAt', '未知时间')}
         """
     return markdown_message
+
+
+class AlertStatus(Enum):
+    FIRING = auto()
+    RESOLVED = auto()
+
+    @property
+    def description(self):
+        descriptions = {
+            self.FIRING: '触发中',
+            self.RESOLVED: '已解决',
+        }
+        return descriptions.get(self, '未知状态')
