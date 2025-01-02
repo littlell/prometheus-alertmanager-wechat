@@ -103,7 +103,7 @@
     receivers:
       - name: 'wechat'
         webhook_configs:
-          - url: 'http://{Docker或K8S部署服务的地址}/alertinfo'
+          - url: 'http://monitor-alert-wx-adapter/alert'
             send_resolved: true
     ```
 

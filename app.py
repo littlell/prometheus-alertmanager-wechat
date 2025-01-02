@@ -14,7 +14,7 @@ app.logger.setLevel(logging.INFO)
 WEBHOOK_URL = os.getenv('WEBHOOK_URL')
 
 
-@app.route('/alertinfo', methods=['POST'])
+@app.route('/alert', methods=['POST'])
 def alert_info():
     data = request.get_json()
     app.logger.info("Received alert JSON: %s", data)
