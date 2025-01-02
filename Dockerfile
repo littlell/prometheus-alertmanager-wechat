@@ -15,7 +15,7 @@ ENV PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/
 
 # 安装必要的依赖
 RUN apk add --no-cache curl && \
-    pip install --no-cache-dir flask requests python-dateutil
+    pip install --no-cache-dir flask requests python-dateutil pytz
 
 # 暴露端口
 EXPOSE 5000
