@@ -14,10 +14,7 @@ app.logger.setLevel(logging.INFO)
 @app.route('/alertinfo', methods=['POST'])
 def hello_world():
     data = request.get_json()
-    app.logger.info(data)
-
-    # 从环境变量获取目标WEBHOOK URL
-    url = os.getenv('WEBHOOK_URL')
+    app.logger.info("Receive alert json[%s]", data)
 
     if 'alerts' in data and len(data['alerts']) > 0 and 'labels' in data['alerts'][0]:
         alert_name = data['alerts'][0]['labels'].get('alertname', '未知告警')
@@ -42,7 +39,14 @@ def hello_world():
         # 将字典转换为JSON格式的字符串
         json_send_data = json.dumps(send_data)
 
-        # 发送POST请求
+        # 从环境变量获取目标WEBHOOK URL
+        url = os.getenv('WEBHOOK_URL')
+        if not url:
+            # 如果没有设置WEBHOOK_URL环境变量，则引发异常
+            app.logger.critical("WEBHOOK_URL environment variable is not set.")
+            return "<p>WEBHOOK_URL is required but not provided.</p>", 500
+
+            # 发送POST请求
         response = requests.post(url, headers={'Content-Type': 'application/json'},
                                  data=json_send_data)
 
@@ -59,6 +63,7 @@ def build_markdown_message(alert_name, status, severity, instance, application,
                            starts_at):
     # Markdown格式的告警信息
     markdown_message = f"""
+    
     **告警名称**：{alert_name}
     **告警状态**：{status}
     **告警级别**：{severity}
