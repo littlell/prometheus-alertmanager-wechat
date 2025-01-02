@@ -17,13 +17,14 @@ def hello_world():
     url = os.getenv('WEBHOOK_URL')
 
     if 'alerts' in data and len(data['alerts']) > 0 and 'labels' in data['alerts'][0]:
-        alertname = data['alerts'][0]['labels'].get('alertname', '未知告警')
+        alert_name = data['alerts'][0]['labels'].get('alertname', '未知告警')
         status = data['alerts'][0].get('status', '未知状态')
         severity = data['alerts'][0]['labels'].get('severity', '未知严重性')
         instance = data['alerts'][0]['labels'].get('instance', '未知实例')
-        job = data['alerts'][0]['labels'].get('job', '未知作业')
+        application = data['alerts'][0]['labels'].get('app', '未知应用')
 
-        markdown_message = build_markdown_message(alertname, data, instance, job, severity, status)
+        markdown_message = build_markdown_message(alert_name, data, instance, application, severity,
+                                                  status)
 
         # POST请求的数据
         send_data = {
@@ -49,14 +50,14 @@ def hello_world():
         return "<p>提供的数据中缺少必要的键值</p>", 400
 
 
-def build_markdown_message(alertname, data, instance, job, severity, status):
+def build_markdown_message(alert_name, data, instance, application, severity, status):
     # Markdown格式的告警信息
     markdown_message = f"""
         
-        **告警名称**：{alertname}
+        **告警名称**：{alert_name}
         **告警状态**：{status}
         **告警级别**：{severity}
-        **作业名称**：{job}
+        **应用名称**：{application}
         **故障实例**：{instance}
         **告警时间**：{data['alerts'][0].get('startsAt', '未知时间')}
         """
