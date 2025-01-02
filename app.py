@@ -1,10 +1,9 @@
 import json
 import logging
 import os
-from datetime import datetime
-from dateutil import parser
 
 import requests
+from dateutil import parser
 from flask import Flask, request
 
 app = Flask(__name__)
