@@ -2,7 +2,8 @@
 
 ## 简介
 
-这是一个基于 Flask 的简单 Web 服务，用于接收 Alert Manager 的告警信息，并将其以 Markdown 格式转发到指定的 Webhook URL，实现告警通知与企业微信群的集成。效果如下：
+这是一个基于 Flask 的简单 Web 服务，用于接收 Alert Manager 的告警信息，并将其以 Markdown 格式转发到指定的
+Webhook URL，实现告警通知与企业微信群的集成。效果如下：
 
 ![效果演示](demo.png)
 
@@ -39,7 +40,7 @@
 
 3. 在 Kubernetes 上运行：
 
-    创建一个名为 `deployment.yaml` 的文件，内容如下：
+   创建一个名为 `deployment.yaml` 的文件，内容如下：
 
     ```yaml
     apiVersion: apps/v1
@@ -81,15 +82,15 @@
           port: 80
           targetPort: 5000
     ```
-    
-    应用配置：
+
+   应用配置：
     ```sh
     kubectl apply -f deployment.yaml
     ```
 
 4. 与 Alert Manager 集成：
 
-    在 Alert Manager 配置文件中添加以下配置：
+   在 Alert Manager 配置文件中添加以下配置：
 
     ```yaml
     route:
@@ -106,5 +107,3 @@
           - url: 'http://monitor-alert-wx-adapter/alert'
             send_resolved: true
     ```
-
-通过以上步骤，你可以将 Prometheus Alertmanager 与微信集成，实现告警信息的自动推送。如果有任何问题或需要进一步的帮助，请告诉我！
