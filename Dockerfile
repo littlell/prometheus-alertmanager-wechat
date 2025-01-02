@@ -17,5 +17,5 @@ RUN apk add --no-cache curl && \
 # 暴露端口
 EXPOSE 5000
 
-# 设置默认命令来运行应用
-CMD ["flask", "run"]
+# 设置默认命令来运行应用，并绑定到所有网络接口
+CMD ["flask", "run", "--host=0.0.0.0"]
