@@ -1,57 +1,43 @@
 {
-  "version": "4",
-  "groupKey": "{}",
+  "receiver": "ca-wechat",
   "status": "firing",
   "alerts": [
     {
       "status": "firing",
       "labels": {
-        "alertname": "InstanceDown",
-        "instance": "localhost:9090",
-        "job": "prometheus",
-        "monitor": "codelab-monitor",
-        "severity": "page"
+        "alertname": "ERROR-LOG",
+        "app": "ngtrade-app-order-admin",
+        "app_kubernetes_io_managed_by": "Helm",
+        "instance": "10.192.4.135:81",
+        "level": "error",
+        "project": "ca",
+        "severity": "严重"
       },
       "annotations": {
-        "description": "实例localhost:9090已下线",
-        "summary": "Instance Down"
+        "description": "ngtrade-app-order-admin",
+        "summary": "Error logged.."
       },
-      "startsAt": "2024-07-16T12:00:00Z",
+      "startsAt": "2025-01-04T10:46:17.546519462Z",
       "endsAt": "0001-01-01T00:00:00Z",
-      "generatorURL": "http://localhost:9090/graph?g0.expr=up%7Bjob%3D%22prometheus%22%7D+%3D%3D+0&g0.tab=1",
-      "fingerprint": "4f7b967e4d6058c8"
+      "generatorURL": "http://monitor-prometheus-67c4fdc6b6-tf4zt:9090/graph?g0.expr=rate%28logback_events_total%7Blevel%3D%22error%22%7D%5B1m%5D%29+%3E+0&g0.tab=1"
     }
   ],
-  "groupLabels": {},
+  "groupLabels": {
+    "project": "ca"
+  },
   "commonLabels": {
-    "alertname": "InstanceDown",
-    "job": "prometheus",
-    "monitor": "codelab-monitor",
-    "severity": "page"
+    "alertname": "ERROR-LOG",
+    "app": "ngtrade-app-order-admin",
+    "app_kubernetes_io_managed_by": "Helm",
+    "instance": "10.192.4.135:81",
+    "level": "error",
+    "project": "ca",
+    "severity": "严重"
   },
   "commonAnnotations": {
-    "description": "实例localhost:9090已下线",
-    "summary": "Instance Down"
+    "description": "ngtrade-app-order-admin",
+    "summary": "Error logged.."
   },
-  "externalURL": "http://localhost:9093",
-  "alerts": [
-    {
-      "status": "firing",
-      "labels": {
-        "alertname": "InstanceDown",
-        "instance": "localhost:9090",
-        "job": "prometheus",
-        "monitor": "codelab-monitor",
-        "severity": "page"
-      },
-      "annotations": {
-        "description": "实例localhost:9090已下线",
-        "summary": "Instance Down"
-      },
-      "startsAt": "2024-07-16T12:00:00Z",
-      "endsAt": "0001-01-01T00:00:00Z",
-      "generatorURL": "http://localhost:9090/graph?g0.expr=up%7Bjob%3D%22prometheus%22%7D+%3D%3D+0&g0.tab=1",
-      "fingerprint": "4f7b967e4d6058c8"
-    }
-  ]
+  "externalURL": "http://monitor-alert-manager-cb4ccc454-f9n7f:9093",
+  "version": "4"
 }
