@@ -49,6 +49,7 @@ def extract_alert_details(alert):
         'alert_name': alert['labels'].get('alertname', '未知告警'),
         'status': alert.get('status', '未知状态'),
         'severity': alert['labels'].get('severity', '未知严重性'),
+        'module': alert['labels'].get('module', '未知业务'),
         'instance': alert['labels'].get('instance', '未知实例'),
         'application': alert['labels'].get('app', '未知应用'),
         'starts_at': format_time(alert.get('startsAt', '未知时间'))
@@ -70,12 +71,13 @@ def format_time(time_str):
     return formatted_time
 
 
-def build_markdown_message(alert_name, status, severity, instance, application, starts_at):
+def build_markdown_message(alert_name, status, severity, module, instance, application, starts_at):
     # Markdown格式的告警信息
     markdown_message = textwrap.dedent(f"""
     **告警名称**：{alert_name}
     **告警状态**：{status}
     **告警级别**：{severity}
+    **业务名称**：{module}
     **实例名称**：{instance}
     **应用名称**：{application}
     **告警时间**：{starts_at}
