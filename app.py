@@ -63,7 +63,7 @@ def format_time(time_str):
         # 将时间转换为 UTC+8 时区
         local_time = utc_time.astimezone(pytz.timezone('Asia/Shanghai'))
         # 格式化时间字符串
-        formatted_time = local_time.strftime("%Y年%m月%d日 %H时%M分%S秒")
+        formatted_time = local_time.strftime("%m月%d日 %H时%M分%S秒")
     except Exception as e:
         app.logger.error("Error parsing time: %s", e)
         formatted_time = '未知时间'
