@@ -24,16 +24,18 @@ def alert_info():
         app.logger.error("Invalid alert data received: %s", data)
         return "<p>提供的数据中缺少必要的键值</p>", 400
 
-    alert = data['alerts'][0]
+    for alert in data['alerts']:
+        send_alert(alert)
+
+    return "所有告警已处理", 200
+
+def send_alert(alert):
     alert_details = extract_alert_details(alert)
     markdown_message = build_markdown_message(**alert_details)
-
     if not WEBHOOK_URL:
         app.logger.critical("WEBHOOK_URL environment variable is not set.")
         return "<p>WEBHOOK_URL is required but not provided.</p>", 500
-
     response = send_alert_to_webhook(markdown_message)
-
     app.logger.info("Response from webhook: %s", response.text)
     return "<p>Hello, World!</p>"
 

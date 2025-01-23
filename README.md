@@ -18,12 +18,12 @@ Webhook URL，实现告警通知与企业微信群的集成。效果如下：
 
 2. 运行程序：
     ```sh
-    flask run --debug
+   .venv/bin/flask run --debug
     ```
 
 3. 测试：
     ```sh
-    curl -X POST -H "Content-Type: application/json" -d @data.json http://localhost:5000/alertinfo
+    curl -X POST -H "Content-Type: application/json" -d @data.json http://localhost:5000/alert
     ```
 
 ### 容器化部署
