@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import textwrap
 
 import pytz
 import requests
@@ -13,6 +12,18 @@ app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
 
 WEBHOOK_URL = os.getenv('WEBHOOK_URL')
+
+STATUS_LABELS = {
+    'firing': '告警中',
+    'resolved': '已恢复',
+}
+
+EXTRA_LABEL_KEYS = ('uri', 'method', 'status', 'pod', 'namespace', 'downstream')
+
+
+@app.route('/healthz')
+def healthz():
+    return {'status': 'ok'}, 200
 
 
 @app.route('/alert', methods=['POST'])
@@ -47,22 +58,32 @@ def validate_alert_data(data):
 
 
 def extract_alert_details(alert):
+    labels = alert.get('labels', {})
+    annotations = alert.get('annotations', {})
     alert_details = {
-        'alert_name': alert['labels'].get('alertname', '未知告警'),
+        'alert_name': labels.get('alertname', '未知告警'),
         'status': alert.get('status', '未知状态'),
-        'severity': alert['labels'].get('severity', '未知严重性'),
-        'module': alert['labels'].get('module', '未知业务'),
-        'instance': alert['labels'].get('instance', '未知实例'),
-        'application': alert['labels'].get('app', '未知应用'),
-        'starts_at': format_time(alert.get('startsAt', '未知时间'))
+        'severity': labels.get('severity', '未知严重性'),
+        'module': labels.get('module', '未知业务'),
+        'instance': labels.get('instance', '未知实例'),
+        'application': labels.get('app', '未知应用'),
+        'starts_at': format_time(alert.get('startsAt', '')),
+        'ends_at': format_time(alert.get('endsAt', '')),
+        'summary': annotations.get('summary', ''),
+        'description': annotations.get('description', ''),
+        'extra_labels': format_labels(labels),
     }
     return alert_details
 
 
 def format_time(time_str):
+    if not time_str:
+        return ''
     try:
         # 解析时间字符串并将其转换为 UTC 时区
         utc_time = parser.parse(time_str).astimezone(pytz.utc)
+        if utc_time.year <= 1:
+            return ''
         # 将时间转换为 UTC+8 时区
         local_time = utc_time.astimezone(pytz.timezone('Asia/Shanghai'))
         # 格式化时间字符串
@@ -73,18 +94,45 @@ def format_time(time_str):
     return formatted_time
 
 
-def build_markdown_message(alert_name, status, severity, module, instance, application, starts_at):
+def format_status(status):
+    return STATUS_LABELS.get(status, status)
+
+
+def status_color(status, severity):
+    if status == 'resolved':
+        return 'info'
+    return 'warning' if severity == '严重' else 'comment'
+
+
+def format_labels(labels):
+    return ' | '.join(
+        f'{key}={labels[key]}'
+        for key in EXTRA_LABEL_KEYS
+        if labels.get(key)
+    )
+
+
+def build_markdown_message(alert_name, status, severity, module, instance, application,
+                           starts_at, ends_at='', summary='', description='', extra_labels=''):
     # Markdown格式的告警信息
-    markdown_message = textwrap.dedent(f"""
-    **告警名称**：{alert_name}
-    **告警状态**：{status}
-    **告警级别**：{severity}
-    **业务名称**：{module}
-    **实例名称**：{instance}
-    **应用名称**：{application}
-    **告警时间**：{starts_at}
-    """)
-    return markdown_message
+    lines = [
+        f'## <font color="{status_color(status, severity)}">【{format_status(status)}】{alert_name}</font>',
+        '',
+        f'**级别**：{severity}　**模块**：{module}',
+        f'**应用**：{application}',
+        f'**实例**：{instance}',
+    ]
+    if summary:
+        lines.append(f'**摘要**：{summary}')
+    if description:
+        lines.append(f'**详情**：{description}')
+    if starts_at:
+        lines.append(f'**触发时间**：{starts_at}')
+    if status == 'resolved' and ends_at:
+        lines.append(f'**恢复时间**：{ends_at}')
+    if extra_labels:
+        lines.append(f'**关键标签**：{extra_labels}')
+    return '\n'.join(lines) + '\n'
 
 
 def send_alert_to_webhook(message):
