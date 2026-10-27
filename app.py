@@ -116,7 +116,7 @@ def build_markdown_message(alert_name, status, severity, module, instance, appli
                            starts_at, ends_at='', summary='', description='', extra_labels=''):
     # Markdown格式的告警信息
     lines = [
-        f'## <font color="{status_color(status, severity)}">【{format_status(status)}】{alert_name}</font>',
+        f'<font color="{status_color(status, severity)}">{format_status(status)} · {alert_name}</font>',
         '',
         f'**级别**：{severity}　**模块**：{module}',
         f'**应用**：{application}',
